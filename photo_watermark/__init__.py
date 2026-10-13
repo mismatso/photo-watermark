@@ -1,0 +1,10 @@
+"""Marcas de agua para fotografías, en el escritorio y desde la terminal."""
+
+APP_NAME = "Photo Watermark"
+__version__ = "1.0"
+APP_DESCRIPTION = "Una aplicación para estampar marcas de agua sobre fotografías"
+AUTHOR = "Misael Matamoros"
+COPYRIGHT = f"Copyright © 2026 {AUTHOR}"
+WEBSITE = "https://librecia.com/"
+WEBSITE_LABEL = "LibreCía"
+__license__ = "GPL-3.0-or-later"
