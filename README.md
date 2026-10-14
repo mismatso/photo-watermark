@@ -2,6 +2,8 @@
 
 Aplicación de escritorio en español para estampar un logo sobre una fotografía o un lote. Compatible con **Debian 11, 12 y 13 con Cinnamon**, con Python 3.9 o superior, GTK 3.24 y Pillow 8.1 o superior. Todo el procesamiento se hace localmente.
 
+![Photo Watermark](assets/photo-watermark-demo.png)
+
 ## Instalar y ejecutar
 
 Instala las dependencias desde los repositorios de Debian:
@@ -36,8 +38,6 @@ El instalador solo crea un archivo `.desktop` del usuario. El programa continúa
 5. Elige la carpeta de salida y el formato. Pulsa **Aplicar a las fotografías**.
 
 El procesamiento corre en segundo plano y muestra el progreso y el resultado de cada archivo. **Cancelar** termina la fotografía actual y omite las pendientes. Un archivo defectuoso o una marca que no cabe generan un error para esa fotografía; el resto del lote continúa. Puedes guardar un informe de los resultados.
-
-El menú de hamburguesa **☰**, en la barra superior, incluye **Acerca de Photo Watermark** y **Salir**. El diálogo «Acerca de» muestra la versión 1.0, la descripción, el enlace a [LibreCía](https://librecia.com/), los créditos de Misael Matamoros, el copyright de 2026 y la declaración de ausencia de garantía bajo la GPL versión 3 o posterior.
 
 ### Ejemplos de tamaño
 
