@@ -1,5 +1,7 @@
 """Small XDG-compliant, per-user logo library and persistent presets."""
 
+from __future__ import annotations
+
 from dataclasses import asdict
 import json
 import os

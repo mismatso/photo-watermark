@@ -1,6 +1,6 @@
 # Photo Watermark 1.0
 
-Aplicación de escritorio en español para estampar un logo sobre una fotografía o un lote. Diseñada para **Debian 12 y 13 con Cinnamon**, con Python 3.11 o superior y GTK 3. Todo el procesamiento se hace localmente.
+Aplicación de escritorio en español para estampar un logo sobre una fotografía o un lote. Compatible con **Debian 11, 12 y 13 con Cinnamon**, con Python 3.9 o superior, GTK 3.24 y Pillow 8.1 o superior. Todo el procesamiento se hace localmente.
 
 ## Instalar y ejecutar
 
@@ -122,6 +122,21 @@ El comando devuelve 0 si todas las fotos se procesaron y 1 si alguna falló; imp
 
 ## Verificación
 
+### Compatibilidad con Debian 11
+
+Debian 11 utiliza Python 3.9 y Pillow 8.1. Las anotaciones de tipos se evalúan de forma diferida para permitir esa versión de Python, y el filtro LANCZOS funciona tanto con las constantes de Pillow 8.1 como con la enumeración de versiones posteriores. Puedes utilizar las dependencias del sistema y ejecutar `./run.sh` sin instalar otro Python.
+
+Si una copia anterior falla con `TypeError: unsupported operand type(s) for |`, actualiza los cuatro archivos `photo_watermark/cli.py`, `photo_watermark/storage.py`, `photo_watermark/gui.py` y `photo_watermark/core.py`. También puedes aplicar el parche `compatibilidad-debian11.patch` desde la carpeta de esa copia:
+
+```bash
+patch -p1 < compatibilidad-debian11.patch
+./run.sh
+```
+
+El código de este proyecto ya contiene la corrección; el parche sirve para actualizar una copia anterior.
+
+### Pruebas
+
 Pruebas de cálculo, composición, orientación, persistencia, archivos y terminal:
 
 ```bash
@@ -134,9 +149,20 @@ Prueba de la interfaz en una sesión gráfica (abre una ventana temporal y usa c
 /usr/bin/python3 tools/gui_smoke.py --screenshot /tmp/photo-watermark-preview.png
 ```
 
-Las dependencias utilizadas están disponibles en los repositorios de [Debian 12](https://packages.debian.org/bookworm/python3-gi) y [Debian 13](https://packages.debian.org/trixie/gir1.2-gtk-3.0). El cargador SVG lo proporciona [librsvg2-common](https://packages.debian.org/bookworm/librsvg2-common).
+Las dependencias utilizadas están disponibles en los repositorios de [Debian 11](https://packages.debian.org/bullseye/python3-pil), [Debian 12](https://packages.debian.org/bookworm/python3-gi) y [Debian 13](https://packages.debian.org/trixie/gir1.2-gtk-3.0). El cargador SVG lo proporciona [librsvg2-common](https://packages.debian.org/bookworm/librsvg2-common).
 
 Verificado en este entorno Debian 12 con Python 3.11, GTK 3.24 y Pillow 9.4: 32 pruebas automatizadas, la prueba gráfica, los 79 archivos de la biblioteca y un lote de las 14 fotografías del proyecto. Se comprobó que los originales conservan su contenido y que las copias mantienen las dimensiones orientadas. La ejecución en Debian 13 y en tu sesión de Cinnamon queda pendiente de validación en esos equipos.
+
+También se verificaron las 32 pruebas y la interfaz en un contenedor Debian 11 con los paquetes del sistema: Python 3.9 y Pillow 8.1, usando Xvfb como pantalla de prueba. Para reproducir esa comprobación con Docker desde la carpeta del proyecto:
+
+```bash
+docker build --tag photo-watermark-debian11-test --file tools/Dockerfile.debian11 tools
+docker run --rm --network none \
+  --mount "type=bind,source=$PWD,target=/app,readonly" \
+  photo-watermark-debian11-test
+```
+
+El contenedor monta el proyecto solo para lectura y usa configuración y archivos de salida temporales.
 
 ## Self-Promotion
 

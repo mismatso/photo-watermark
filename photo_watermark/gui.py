@@ -1,5 +1,7 @@
 """Native GTK 3 desktop interface. Workers never read or modify GTK widgets."""
 
+from __future__ import annotations
+
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import threading

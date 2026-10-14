@@ -11,6 +11,9 @@ from typing import Iterable, Iterator
 from PIL import Image, ImageOps
 
 
+# Pillow 8.1 (Debian 11) predates the Resampling enum.
+LANCZOS = getattr(Image, "Resampling", Image).LANCZOS
+
 PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".tif", ".tiff"}
 LOGO_EXTENSIONS = PHOTO_EXTENSIONS | {".svg"}
 POSITIONS = {
@@ -139,7 +142,7 @@ class Logo:
         if self._cached_size == size:
             return self._cached_render.copy()
         if self._image is not None:
-            image = self._image.resize(size, Image.Resampling.LANCZOS)
+            image = self._image.resize(size, LANCZOS)
         else:
             pixbuf = _pixbuf_module().Pixbuf.new_from_file_at_scale(
                 str(self.path), size[0], size[1], False
@@ -188,7 +191,7 @@ def preview(
 ) -> tuple[Image.Image, Placement]:
     placement = calculate_placement(photo.size, logo.size, settings)
     result = photo.convert("RGBA")
-    result.thumbnail(bounds, Image.Resampling.LANCZOS)
+    result.thumbnail(bounds, LANCZOS)
     sx, sy = result.width / photo.width, result.height / photo.height
     overlay = logo.render((_rounded(placement.width * sx), _rounded(placement.height * sy)))
     result.alpha_composite(_apply_opacity(overlay, settings.opacity),

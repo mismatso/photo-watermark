@@ -1,0 +1,57 @@
+--- a/photo_watermark/cli.py
++++ b/photo_watermark/cli.py
+@@ -1,4 +1,6 @@
+ """With no arguments start GTK; `batch` performs the same work without a display."""
++
++from __future__ import annotations
+ 
+ import argparse
+ from pathlib import Path
+--- a/photo_watermark/storage.py
++++ b/photo_watermark/storage.py
+@@ -1,4 +1,6 @@
+ """Small XDG-compliant, per-user logo library and persistent presets."""
++
++from __future__ import annotations
+ 
+ from dataclasses import asdict
+ import json
+--- a/photo_watermark/gui.py
++++ b/photo_watermark/gui.py
+@@ -1,4 +1,6 @@
+ """Native GTK 3 desktop interface. Workers never read or modify GTK widgets."""
++
++from __future__ import annotations
+ 
+ from concurrent.futures import ThreadPoolExecutor
+ from pathlib import Path
+--- a/photo_watermark/core.py
++++ b/photo_watermark/core.py
+@@ -10,6 +10,9 @@
+ 
+ from PIL import Image, ImageOps
+ 
++
++# Pillow 8.1 (Debian 11) predates the Resampling enum.
++LANCZOS = getattr(Image, "Resampling", Image).LANCZOS
+ 
+ PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".tif", ".tiff"}
+ LOGO_EXTENSIONS = PHOTO_EXTENSIONS | {".svg"}
+@@ -139,7 +142,7 @@
+         if self._cached_size == size:
+             return self._cached_render.copy()
+         if self._image is not None:
+-            image = self._image.resize(size, Image.Resampling.LANCZOS)
++            image = self._image.resize(size, LANCZOS)
+         else:
+             pixbuf = _pixbuf_module().Pixbuf.new_from_file_at_scale(
+                 str(self.path), size[0], size[1], False
+@@ -188,7 +191,7 @@
+ ) -> tuple[Image.Image, Placement]:
+     placement = calculate_placement(photo.size, logo.size, settings)
+     result = photo.convert("RGBA")
+-    result.thumbnail(bounds, Image.Resampling.LANCZOS)
++    result.thumbnail(bounds, LANCZOS)
+     sx, sy = result.width / photo.width, result.height / photo.height
+     overlay = logo.render((_rounded(placement.width * sx), _rounded(placement.height * sy)))
+     result.alpha_composite(_apply_opacity(overlay, settings.opacity),
